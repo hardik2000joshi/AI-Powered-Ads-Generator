@@ -9,7 +9,6 @@ function requireAdmin(req, res, next) {
       .filter(Boolean);
 
        // Temporary diagnostics: don't log the actual user IDs.
-    console.log("ADMIN_CLERK_USER_IDS:", process.env.ADMIN_CLERK_USER_IDS);
 //     console.log("adminIds:", adminIds);
 // console.log("req.authUserId:", req.authUserId);
 console.log("Is admin:", adminIds.includes(req.authUserId));
