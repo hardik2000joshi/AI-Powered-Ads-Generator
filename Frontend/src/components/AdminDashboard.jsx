@@ -23,7 +23,11 @@ export function AdminDashboard() {
       try {
         const token = await getToken();
         const response = await fetch(`${API_URL}/api/admin/purchase-requests`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { 
+            Authorization: `Bearer ${token}`,
+             "Content-Type": "application/json",
+        },
+        credentials: "include",
         });
         const data = await response.json();
         if (!response.ok || !data.success) {

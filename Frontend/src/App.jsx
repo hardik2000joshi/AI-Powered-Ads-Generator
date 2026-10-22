@@ -18,9 +18,45 @@ import { DashboardSidebar } from './components/LoginHomePage'
 import GenerationResult from './components/GenerationResult'
 import { AdminLogin } from './components/AdminLogin'
 import { AdminDashboard } from './components/AdminDashboard'
+import { useEffect } from 'react'
+import { useAuth } from '@clerk/react'
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3007'
+
+function SyncSignedInUser() {
+  const { getToken, isLoaded, isSignedIn } = useAuth()
+
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) return
+    let cancelled = false
+
+    async function syncUser() {
+      try {
+        const token = await getToken()
+        if (!token || cancelled) return
+        const response = await fetch(`${API_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: 'no-store',
+        })
+        if (!response.ok) {
+          console.error('Could not save signed-in user profile.')
+        }
+      } catch (error) {
+        if (!cancelled) console.error('Could not save signed-in user profile:', error)
+      }
+    }
+
+    syncUser()
+    return () => { cancelled = true }
+  }, [getToken, isLoaded, isSignedIn])
+
+  return null
+}
 
 function App() {
   return (
+    <>
+    <SyncSignedInUser />
      <Routes>
       <Route element={<Layout />}>
       <Route path='/' element={
@@ -47,6 +83,7 @@ function App() {
       <Route path='/sign-in' element={<SIGNINPAGE />} />
       <Route path='/sign-up' element={<SIGNUPPAGE/>} />
     </Routes>
+    </>
   )
 }
 
