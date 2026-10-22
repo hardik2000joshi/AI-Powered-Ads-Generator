@@ -9,6 +9,7 @@ app.use(cors({
             "Authorization",
             "Accept",
         ],
+        credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 }));
 app.use(clerkMiddleware());
