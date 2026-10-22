@@ -5,7 +5,7 @@ import { SIGNINPAGE } from './components/SIGNINPAGE'
 import { Dashboard } from './components/Dashboard'
 import { SIGNUPPAGE } from './components/SIGNUPPAGE'
 import { Layout } from './layout'
-import { Features } from './components/features'
+import { Features } from './components/Features';
 import { Pricing } from './components/Pricing'
 import { Faq } from './components/Faq'
 import { CTA } from './components/Cta'
