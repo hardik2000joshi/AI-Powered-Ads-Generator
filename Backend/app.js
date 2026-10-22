@@ -3,7 +3,7 @@ const cors = require("cors");
 const {clerkMiddleware} = require("@clerk/express")
 const app = express();
 app.use(cors({
-    origin: "http://localhost:5174",
+    origin: process.env.FRONTEND_URL,
       allowedHeaders: [
             "Content-Type",
             "Authorization",

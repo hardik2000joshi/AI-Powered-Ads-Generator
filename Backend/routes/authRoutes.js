@@ -1,12 +1,6 @@
 const express = require("express");
 const requireAuth = require("../middleware/requireAuth");
-const {getAuth} = require("@clerk/express");
+const { syncCurrentUser } = require("../controller/authController");
 const router = express.Router();
-router.get("/me", requireAuth,(req, res) => {
-    const {userId} = getAuth(req);
-    res.json({
-        message: "Authenticated Successfully",
-        userId,
-    });
-});
+router.get("/me", requireAuth, syncCurrentUser);
 module.exports = router;

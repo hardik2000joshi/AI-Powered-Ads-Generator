@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
+    clerkUserId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     name: {
       type: String,
       required: true,
@@ -15,11 +20,6 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       maxlength: 254,
-    },
-    password: {
-      type: String,
-      required: true,
-      select: false,
     },
   },
   { timestamps: true }
