@@ -26,6 +26,44 @@ export default function GenerationResult({ generation: initialGeneration, onNewG
   const [error, setError] = useState("");
   const [videoError, setVideoError] = useState("");
   const [videoCreditsExhausted, setVideoCreditsExhausted] = useState(false);
+  const [creditBalance, setCreditBalance] = useState({ image: null, video: null });
+
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) return;
+    let cancelled = false;
+
+    async function loadCreditBalance() {
+      try {
+        const token = await getToken();
+        const response = await fetch(`${API_URL}/api/credits/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) return;
+        if (!cancelled) {
+          setCreditBalance({
+            image: data.account.imageCredits,
+            video: data.account.videoCredits,
+          });
+        }
+      } catch (balanceError) {
+        console.error("Unable to refresh credit balance:", balanceError);
+      }
+    }
+
+    loadCreditBalance();
+    return () => { cancelled = true; };
+  }, [getToken, isLoaded, isSignedIn]);
+
+  useEffect(() => {
+    if (initialGeneration?.remainingImageCredits !== undefined) {
+      setCreditBalance((current) => ({
+        ...current,
+        image: initialGeneration.remainingImageCredits,
+      }));
+    }
+  }, [initialGeneration]);
 
   useEffect(() => {
     if (initialGeneration) {
@@ -168,6 +206,12 @@ export default function GenerationResult({ generation: initialGeneration, onNewG
         ...previous,
         generatedVideoUrl: videoUrl,
       }));
+      if (data.remainingVideoCredits !== undefined) {
+        setCreditBalance((current) => ({
+          ...current,
+          video: data.remainingVideoCredits,
+        }));
+      }
     } catch (err) {
       setVideoError(err.message || "Unable to generate video.");
       setVideoCreditsExhausted(err.code === "NO_VIDEO_CREDITS");
@@ -237,6 +281,17 @@ export default function GenerationResult({ generation: initialGeneration, onNewG
             <span>New Generation</span>
           </button>
         </header>
+
+        <section className="mb-6 grid gap-3 sm:grid-cols-2" aria-live="polite">
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
+            <span className="text-slate-400">Image credits remaining: </span>
+            <strong>{creditBalance.image ?? "Loading…"}</strong>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
+            <span className="text-slate-400">Video credits remaining: </span>
+            <strong>{creditBalance.video ?? "Loading…"}</strong>
+          </div>
+        </section>
 
         {/* Main content */}
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.8fr)_minmax(300px,0.9fr)]">

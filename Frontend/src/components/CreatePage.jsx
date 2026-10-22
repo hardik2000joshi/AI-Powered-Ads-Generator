@@ -192,8 +192,12 @@ export function Create() {
 if (!generated?._id) {
   throw new Error("The server did not return a generation ID.");
 }
-      setGeneration(generated);
-      setGeneratedResult(generated);
+      const generatedWithBalance = {
+        ...generated,
+        remainingImageCredits: data.remainingImageCredits,
+      };
+      setGeneration(generatedWithBalance);
+      setGeneratedResult(generatedWithBalance);
       setSuccess(
         data.message || "Image generated successfully."
       );

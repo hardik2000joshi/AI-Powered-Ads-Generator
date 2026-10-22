@@ -19,6 +19,7 @@ const DEMO_PACKAGES = {
 
 const getMyCredits = async (req, res) => {
   try {
+    res.set("Cache-Control", "no-store");
     const account = await ensureCreditAccount(req.authUserId);
     return res.json({
       success: true,
