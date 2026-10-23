@@ -80,8 +80,8 @@ function App() {
       <Route path="/loginHomePage" element={<DashboardSidebar />} />
       <Route path="/admin-login/*" element={<AdminLogin />} />
       <Route path="/admin" element={<AdminDashboard />} />
-      <Route path='/sign-in' element={<SIGNINPAGE />} />
-      <Route path='/sign-up' element={<SIGNUPPAGE/>} />
+      <Route path='/sign-in/*' element={<SIGNINPAGE />} />
+      <Route path='/sign-up/*' element={<SIGNUPPAGE/>} />
     </Routes>
     </>
   )
