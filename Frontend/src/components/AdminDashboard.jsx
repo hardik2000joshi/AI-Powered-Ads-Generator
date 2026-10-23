@@ -22,6 +22,7 @@ export function AdminDashboard() {
     async function loadRequests() {
       try {
         const token = await getToken();
+        console.log("Clerk token available:", Boolean(token));
         const response = await fetch(`${API_URL}/api/admin/purchase-requests`, {
           headers: { 
             Authorization: `Bearer ${token}`,
@@ -29,6 +30,9 @@ export function AdminDashboard() {
         },
         credentials: "include",
         });
+         console.log("API URL:", `${API_URL}/api/admin/purchase-requests`);
+console.log("Response status:", response.status);
+console.log("Response content type:", response.headers.get("content-type"));
         const data = await response.json();
         if (!response.ok || !data.success) {
           throw new Error(data.message || "Unable to load admin dashboard.");
@@ -68,7 +72,7 @@ export function AdminDashboard() {
               <p className="font-semibold">Admin access could not be verified</p>
               <p className="mt-1 text-sm">{error}</p>
               {error.includes("Admin access required") && (
-                <p className="mt-2 text-sm">Add your Clerk user ID to <code>ADMIN_CLERK_USER_IDS</code> in the backend environment and restart the server.</p>
+                <p className="mt-2 text-sm">Add your Clerk user ID to <code>ADMIN_CLERK_USER_ID</code> in the backend environment and restart the server.</p>
               )}
             </div>
           </div>
