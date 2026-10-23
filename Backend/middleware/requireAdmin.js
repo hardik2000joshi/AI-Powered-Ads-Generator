@@ -3,7 +3,7 @@ const requireAuth = require("./requireAuth");
 function requireAdmin(req, res, next) {
   console.log("requireAdmin middleware reached");
   requireAuth(req, res, () => {
-    const adminIds = (process.env.ADMIN_CLERK_USER_IDS)
+    const adminIds = (process.env.ADMIN_CLERK_USER_ID)
       .split(",")
       .map((id) => id.trim())
       .filter(Boolean);
